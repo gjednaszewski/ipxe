@@ -400,7 +400,7 @@ static int echo_exec ( int argc, char **argv ) {
 		return -ENOMEM;
 
 	/* Print text */
-	printf ( "%s%s", text, ( opts.no_newline ? " " : "\n" ) );
+	printf ( "%s%s", text, ( opts.no_newline ? "" : "\n" ) );
 
 	free ( text );
 	return 0;
@@ -498,37 +498,38 @@ struct command isset_command __command = {
 	.exec = isset_exec,
 };
 
-/** "equals" options */
-struct equals_options {};
+/** "iseq" options */
+struct iseq_options {};
 
-/** "equals" option list */
-static struct option_descriptor equals_opts[] = {};
+/** "iseq" option list */
+static struct option_descriptor iseq_opts[] = {};
 
-/** "equals" command descriptor */
-static struct command_descriptor equals_cmd =
-	COMMAND_DESC ( struct equals_options, equals_opts, 2, 2,
+/** "iseq" command descriptor */
+static struct command_descriptor iseq_cmd =
+	COMMAND_DESC ( struct iseq_options, iseq_opts, 2, 2,
 		       "<value1> <value2>" );
 
 /**
- * "equals" command
+ * "iseq" command
  *
  * @v argc		Argument count
  * @v argv		Argument list
  * @ret rc		Return status code
  */
-static int equals_exec ( int argc, char **argv ) {
-	struct equals_options opts;
+static int iseq_exec ( int argc, char **argv ) {
+	struct iseq_options opts;
 	int rc;
     
 	/* Parse options */
-	if ( ( rc = parse_options ( argc, argv, &equals_cmd, &opts ) ) != 0 )
+	if ( ( rc = parse_options ( argc, argv, &iseq_cmd, &opts ) ) != 0 )
 		return rc;
     
-    return strcmp ( argv[1], argv[2] );
+    rc = strcmp ( argv[optind], argv[optind + 1] );
+    return ( ( rc == 0 ) ? 0 : -ERANGE );
 }
 
-/** "equals" command */
-struct command equals_command __command = {
-	.name = "equals",
-	.exec = equals_exec,
+/** "iseq" command */
+struct command iseq_command __command = {
+	.name = "iseq",
+	.exec = iseq_exec,
 };
